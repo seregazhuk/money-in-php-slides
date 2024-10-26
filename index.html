@@ -4,20 +4,720 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>Как считать деньги и не терять их</title>
 
 		<link rel="stylesheet" href="dist/reset.css">
 		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+		<link rel="stylesheet" href="dist/theme/white.css">
 
+		<style>
+			:root {
+				--r-main-font: 'Roboto', 'Noto Color Emoji', sans-serif;
+				--r-heading-font: 'Roboto', 'Noto Color Emoji', sans-serif;
+				--r-code-font: 'Roboto Mono', 'Noto Color Emoji', monospace;
+				--r-block-margin: 10px;
+			}
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+				text-transform: none;
+			}
+			.reveal pre {
+				font-size: .60em;
+			}
+			.nohighlight {
+				padding: 1em !important;
+			}
+			.reveal .hljs {
+				min-height: auto;
+			}
+			td.hljs-ln-code {
+				white-space: pre;
+			}
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6, .reveal pre, .reveal p, .reveal img {
+				margin: 0 var(--r-block-margin) calc(var(--r-block-margin) * 2);
+			}
+			.reveal pre {
+				width: auto;
+			}
+			.reveal pre code {
+				max-height: none;
+			}
+			.reveal .r-stack > * {
+				margin: 0;
+			}
+			.horizontal {
+				display: flex;
+				width: 100%;
+				justify-content: space-between;
+			}
+			.horizontal > * {
+				flex-grow: 1;
+			}
+			.horizontal-half > * {
+				flex-grow: 0 !important;
+				width: calc(50% - var(--r-block-margin) * 2) !important;
+			}
+			.reveal table.no-border td {
+				border-bottom: 0;
+			}
+			.fragment.blur {
+				filter: blur(5px);
+			}
+			.fragment.blur.visible {
+				filter: none;
+			}
+			.links a {
+				font-size: 38px;
+			}
+		</style>
 		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="plugin/highlight/github.css">
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<h2>Как считать деньги и не терять их</h2>
+					<div style="display: flex; align-items: center; justify-content: center;">
+						<pre>
+							<code class="language-php" data-trim style="text-align: center">
+								echo 0.1 + 0.2 == 0.3 ? "true" : "false";
+							</code>
+						</pre>
+					</div>
+				</section>
+				<section>
+					<p>«Я могу установить цену 4.20, но когда ставлю 4.10 - она меняется на 4.09. Почему?»</p>
+					<pre class="fragment">
+						<code class="language-php" data-trim style="text-align: center">
+							var_dump((int)(4.20 * 100)); // 420
+						</code>
+					</pre>
+					<pre class="fragment">
+						<code class="language-php" data-trim style="text-align: center">
+						var_dump((int)(4.10 * 100)); // 409
+						</code>
+					</pre>
+				</section>
+				<section>
+					<img src="images/mem-thinking.jpg" alt="" style="width: 80%">
+				</section>
+				<section>
+					<h2>Float</h2>
+					<pre>
+						<code class="language-php" data-trim style="text-align: center">
+							var_dump(4.10 * 100); // float(409.99999999999994)
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>IEEE-754</h2>
+					<img src="images/converter.png" alt="" style="width: 100%">
+				</section>
+				<section>
+					<h2>Float</h2>
+					<pre>
+						<code class="language-php" data-trim style="text-align: left">
+							$priceInUsd = 4.10; // 4.099999904632568359375
+
+							$priceInMinorUnits = $priceInUsd * 100; // 409.99999
+
+							var_dump((int)$priceInMinorUnits); // 409
+						</code>
+					</pre>
+				</section>
+				<section>
+					<img src="images/meme-cannot-just.jpg" alt="" style="width: 100%">
+				</section>
+				<section>
+					<h2>String</h2>
+					<pre>
+						<code class="language-php" data-trim style="text-align: left">
+							$a = '0.01';
+							$b = '5';
+
+							var_dump(bcadd($a, $b)); // "5"
+							var_dump(bcadd($a, $b, 2)); // "5.01"
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Integer</h2>
+					<pre>
+						<code class="language-php" data-trim style="text-align: center">
+							$a = 1;   // $0.01
+							$b = 500; // $5.00
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Номиналы</h2>
+					<p class="fragment highlight-current-blue">1, 100, 1000 JPY</p>
+					<p class="fragment highlight-current-blue">0.001 Dinar</p>
+					<p class="fragment highlight-current-blue">1.631 EUR</p>
+				</section>
+				<section>
+					<h2>Валюты</h2>
+					<p class="fragment highlight-current-blue">Эквадор: USD</p>
+					<p class="fragment highlight-current-blue">Панама: USD, PAB</p>
+					<p class="fragment highlight-current-blue">$: USD, Peso</p>
+				</section>
+				<section>
+					<h2>Форматирование</h2>
+					<table class="no-border">
+						<tbody>
+							<tr>
+								<td>€ 10 000</td>
+								<td class="fragment" data-fragment-index="1">¥ 1 0000</td>
+							</tr>
+							<tr>
+								<td>£ 100 000</td>
+								<td class="fragment" data-fragment-index="1">¥ 10 000</td>
+							</tr>
+							<tr>
+								<td>$ 1 000 000</td>
+								<td class="fragment" data-fragment-index="1">¥ 100 0000</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+				<section><img src="images/too-much.jpg" alt=""></section>
+				<section>
+					<h2>Библиотеки</h2>
+					<img src="images/libs.png" alt="">
+				</section>
+				<section>
+					<h2>MoneyPHP: паттерн Money</h2>
+					<pre>
+						<code class="language-php" data-trim>
+							final class Money implements JsonSerializable
+							{
+								public function __construct(
+									private readonly int|string $amount,
+									private readonly Currency $currency
+								) {
+									/* ... */
+								}
+							}
+						</code>
+					</pre>
+				</section>
+				<section>
+					<pre>
+						<code class="language-php" data-trim>
+							use Money\Currency;
+							use Money\Money;
+
+							$five = new Money(500, new Currency('RUB')); // 5,00 ₽
+							$five = Money::RUB(500);
+
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Базовая арифметика</h2>
+					<pre>
+						<code class="language-php" data-trim data-line-numbers="1,2,4-5|1,2,7-8|1,2,10-11">
+							$value1 = Money::RUB(100000); // 1000₽
+							$value2 = Money::RUB(50000); // 500₽
+
+							$value1->subtract($value2); // 500₽
+							$value1->add($value2); // 1500₽
+
+							$value1->divide(2); // 500₽
+							$value2->multiply(2); // 1000₽
+
+							$value1->ratioOf($value2); // 2.0
+							$value1->mod(Money::RUB(70000)); // 300₽
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Сравнение</h2>
+					<pre>
+						<code class="language-php" data-trim>
+							$value1 = Money::RUB(100000); // 1000₽
+							$value2 = Money::RUB(80000); // 800₽
+
+							$result = $value1->isSameCurrency($value2); // true
+
+							$result = $value1->equals($value2); // false
+
+							$result = $value1->greaterThan($value2); // false
+						</code>
+					</pre>
+					<pre class="fragment">
+						<code class="language-php" data-trim>
+							$valueInRub = new Money(100, new Currency('RUB'));
+							$valueInUSD = new Money(100, new Currency('USD'));
+
+							$valueInRub->equals($valueInUSD);
+
+							// InvalidArgumentException: Currencies must be identical
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Иммутабельность</h2>
+					<pre>
+						<code class="language-php" data-trim>
+							use Money\Currency;
+							use Money\Money;
+
+							$net = new Money(123, new Currency('USD')); // $1.23
+							$gross = $net->multiply('1.10', Money::ROUND_UP);
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Конвертация</h2>
+					<pre style="width: 103%">
+						<code class="language-php" data-trim data-line-numbers="6-12, 6-15">
+							use Money\Converter;
+							use Money\Currency;
+							use Money\Currencies\ISOCurrencies;
+							use Money\Exchange\FixedExchange;
+
+							$exchange = new FixedExchange([
+							  'EUR' => [
+								  'USD' => '1.25'
+							  ]
+							]);
+
+							$converter = new Converter(new ISOCurrencies(), $exchange);
+
+							$eur100 = Money::EUR(100);
+							$usd125 = $converter->convert($eur100, new Currency('USD'));
+						</code>
+					</pre>
+				</section>
+				<section>
+					<img src="images/currency.php.png" alt="">
+				</section>
+				<section>
+					<pre>
+						<code class="language-php" data-trim>
+							namespace Exchanger\Contract;
+
+							interface ExchangeRateProvider
+							{
+								public function getExchangeRate(
+									ExchangeRateQuery $exchangeQuery
+								): ExchangeRate;
+							}
+						</code>
+					</pre>
+				</section>
+				<section>
+					<pre>
+						<code class="language-php" data-trim data-line-numbers="6-8, 6-13">
+							use Money\Money;
+							use Money\Converter;
+							use Money\Currencies\ISOCurrencies;
+							use Money\Exchanger\ExchangerExchange;
+
+							// $exchanger = Implementation of ExchangeRateProvider
+							$exchange = new ExchangerExchange($exchanger);
+							$converter = new Converter(new ISOCurrencies(), $exchange);
+
+							$eurAmount = Money::EUR(100);
+							$usdAmount = $converter->convert(
+								$eurAmount, new Currency('USD')
+							);
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Exchange Rates</h2>
+					<pre>
+						<code class="language-bash" data-trim style="text-align: center">
+							composer require florianv/swap
+
+							composer require florianv/exchanger
+						</code>
+					</pre>
+				</section>
+				<section>
+					<img src="images/gone.png" alt="">
+					<code class="fragment" data-trim style="text-align: center; font-size: smaller" >
+						base currency | quote currency | date | rate
+					</code>
+				</section>
+				<section>
+					<h2>Форматирование</h2>
+					<pre>
+						<code class="language-php" data-trim style="text-align: center">
+							$amount = new Money(1234567, new Currency('USD'));
+						</code>
+					</pre>
+					<table class="fragment">
+						<thead>
+							<tr>
+								<th>Локаль</th>
+								<th>Сумма</th>
+							</tr>
+						</thead>
+							<tbody>
+								<tr>
+									<td>Нидерланды</td>
+									<td>US$ 12.345,67</td>
+								</tr>
+								<tr>
+									<td>Польша</td>
+									<td>12 345,67 USD</td>
+								</tr>
+								<tr>
+									<td>США</td>
+									<td>$12,345.67</td>
+								</tr>
+							</tbody>
+					</table>
+				</section>
+				<section>
+					<h2>INTL Форматтер</h2>
+					<pre>
+						<code class="language-php" data-trim data-line-numbers="1,3-6|8-10|1,12">
+							$money = new Money(1234567, new Currency('USD'));
+
+							$currencies = new ISOCurrencies();
+							$numberFormatter = new \NumberFormatter(
+								'nl_NL', \NumberFormatter::CURRENCY
+							);
+
+							$moneyFormatter = new IntlMoneyFormatter(
+								$numberFormatter, $currencies
+							);
+
+							echo $moneyFormatter->format($money); // US$ 12.345,67
+
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Decimal Форматтер</h2>
+					<pre>
+						<code class="language-php" data-trim>
+							$money = new Money(1234567, new Currency('USD'));
+
+							$currencies = new ISOCurrencies();
+							$moneyFormatter = new DecimalMoneyFormatter($currencies);
+
+							echo $moneyFormatter->format($money); // outputs 12345.67
+						</code>
+					</pre>
+				</section>
+				<section>
+					<pre style="width: 104%">
+						<code class="language-php" data-trim data-line-numbers="1-19|7-16|1-2,18-19">
+							$dollars = new Money(100, new Currency('USD'));
+							$bitcoin = new Money(100, new Currency('BTC'));
+
+							$numberFormatter = new \NumberFormatter(
+								'en_US', \NumberFormatter::CURRENCY
+							);
+							$intlFormatter = new IntlMoneyFormatter(
+								$numberFormatter, new ISOCurrencies()
+							);
+							$decimalFormatter = new DecimalMoneyFormatter(
+								new CryptoCurrencies()
+							);
+							$moneyFormatter = new AggregateMoneyFormatter([
+								'USD' => $intlFormatter,
+								'BTC' => $decimalFormatter,
+							]);
+
+							echo $moneyFormatter->format($dollars); // outputs $1.00
+							echo $moneyFormatter->format($bitcoin); // outputs 0.0000010
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>JSON</h2>
+					<pre>
+						<code class="language-php" data-trim>
+							$money = new Money(123, new Currency('USD'));
+							echo \json_encode($money);
+							// {"amount":"123","currency":"USD"}
+						</code>
+					</pre>
+				</section>
+				<section>
+					<pre>
+						<code class="language-php" data-trim>
+							$currencies = new ISOCurrencies();
+							$decimalFormatter = new DecimalMoneyFormatter($currencies);
+
+							$money = new Money(123, new Currency('USD'));
+							$moneyJson = [
+								'amount' => $decimalFormatter->format($money),
+								'currency' => $money->getCurrency(),
+							];
+
+							echo \json_encode($moneyJson);
+							// output: {"amount":"1.23","currency":"USD"}
+
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Парсинг</h2>
+					<pre>
+						<code class="language-php" data-trim>
+							public function __construct(
+								private readonly DecimalMoneyParser $moneyParser
+							) {
+								/* ... */
+							}
+						</code>
+					</pre>
+				</section>
+				<section>
+					<pre>
+						<code class="language-php" data-trim data-line-numbers="1-5|7-11">
+							$jsonStr = '{
+								"amountDecimal": "123.45",
+								"currency": "USD"
+							}';
+							$moneyJson = \json_decode($jsonStr);
+
+							$money = $this->decimalMoneyParser->parse(
+								$moneyJson->amountDecimal,
+								new Currency($moneyJson->currency)
+							);
+							echo $money->getAmount(); // outputs 12345
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Scientific notation</h2>
+					<pre>
+						<code class="language-php" data-trim>
+							$commission = 0.00001; // "1.0E-5"
+							$this->moneyParser->parse(
+								(string)$commission, new Currency('ETH')
+							);
+							// Cannot parse "1.0E-5" to Money
+						</code>
+					</pre>
+					<pre class="fragment">
+						<code class="language-php" data-trim>
+							public function __construct(
+								private readonly ExponentialMoneyParser $moneyParser
+							) {
+								/* ... */
+							}
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Кастомные валюты</h2>
+					<p>
+						<img src="images/pepe.png" alt="" style="width:20%">
+						<img src="images/hamster.png" alt="" style="width:20%; z-index:9999">
+						<img src="images/bonk.png" alt="" style="width:20%">
+					</p>
+						<img src="images/thousand.png" alt="" style="width:50%">
+				</section>
+				<section>
+					<h2>Кастомные валюты</h2>
+					<pre>
+						<code class="language-php" data-trim data-line-numbers="1-7|9-12|14-16">
+							$shitCoinCurrenciesList = new \Money\Currencies\CurrencyList(
+								[
+									'PEPE' => 18,
+									'BONK' => 18,
+									'HMSTR' => 18,
+								]
+							);
+
+							$currencies = new AggregateCurrencies([
+								new ISOCurrencies(),
+								$shitCoinCurrenciesList
+							]);
+
+							public function __construct(
+								 private readonly Currencies $currencies
+							) { }
+
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Кастомные валюты</h2>
+					<pre>
+						<code class="language-yaml" data-trim data-line-numbers="1-9|11-16">
+							Money\Currencies\ISOCurrencies: ~
+
+							app.money.shitcoins_list:
+								class: Money\Currencies\CurrencyList
+								arguments:
+									$currencies:
+										PEPE: 18
+										HMSTR: 18
+										BONK: 18
+
+							Money\Currencies\Currencies:
+								class: Money\Currencies\AggregateCurrencies
+								arguments:
+									$currencies:
+										- '@app.money.shitcoins_list'
+										- '@Money\Currencies\ISOCurrencies'
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Архитектура</h2>
+					<pre>
+						<code class="language-php" data-trim>
+							final class Invoice
+							{
+
+								public function addItem(Money $price, int $quantity): void
+								{
+									/* ... */
+								}
+
+								public function getTotalAmount(): Money
+								{
+									/* ... */
+								}
+							}
+
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>База данных</h2>
+					<img src="images/like-this-1.png" alt="" style="width:60%">
+				</section>
+				<section>
+					<pre style="width: 105%">
+						<code style="font-size:22px" class="language-php" data-trim data-line-numbers="1-20|4-5,7-8|10-19">
+							#[ORM\Entity]
+							class Transaction
+							{
+								#[ORM\Column(type: 'decimal', precision: 33, scale: 18, nullable: false)]
+								private string $amount;
+
+								#[ORM\Column(length: 15, nullable: false)]
+								private string $currency;
+
+								public function __construct(Money $amount) {
+									/* ... */
+									$this->amount = $amount->getAmount();
+									$this->currency = $amount->getCurrency()->getCode();
+								}
+
+								public function getPrice(): Money
+								{
+									return new Money($this->amount, new Currency($this->currency));
+								}
+							}
+
+						</code>
+					</pre>
+				</section>
+				<section>
+					<pre style="width: 105%">
+						<code class="language-php" data-trim data-line-numbers="7-8,13,18">
+							#[ORM\Entity]
+							class Transaction
+							{
+								#[ORM\Column(type: 'decimal', precision: 33, scale: 18, nullable: false)]
+								private string $amount;
+
+								#[ORM\Column(type: 'currency', length: 15, nullable: false)]
+								private Currency $currency;
+
+								public function __construct(Money $amount) {
+									/* ... */
+									$this->amount = $amount->getAmount();
+									$this->currency = $amount->getCurrency();
+								}
+
+								public function getPrice(): Money
+								{
+									return new Money($this->amount, $this->currency);
+								}
+							}
+
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>База данных</h2>
+					<div class="r-stack">
+						<table class="fragment current-visible">
+							<thead>
+							<tr>
+								<th>amount</th>
+								<th>currency</th>
+							</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>10000</td>
+									<td>USD</td>
+									<td style="border-bottom: 0">100 USD</td>
+								</tr>
+								<tr>
+									<td>100000</td>
+									<td>1000 RUB</td>
+									<td style="border-bottom: 0">1000 RUB</td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="fragment current-visible">
+							<thead>
+							<tr>
+								<th>amount</th>
+								<th>currency</th>
+							</tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td>100.00</td>
+								<td>USD</td>
+								<td style="border-bottom: 0">100 USD</td>
+							</tr>
+							<tr>
+								<td>1000.00</td>
+								<td>1000 RUB</td>
+								<td style="border-bottom: 0">1000 RUB</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</section>
+				<section>
+					<h2>Правила работы с деньгами</h2>
+					<ul>
+						<li>Никаких float и double в коде и в базе</li>
+						<li>Используем специальные библиотеки (moneyPHP или brick)</li>
+						<li>Заранее договариваемся об API (integer или decimal)</li>
+						<li>Помним про каст float к string (scientific notation)</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Спасибо!</h2>
+					<img src="images/thank-you.jpg" alt="" style="width:80%">
+				</section>
+				<section>
+					<h2>Ссылки</h2>
+					<ul class="links">
+						<li>
+							IEEE-754 конвертер
+							<br/>
+							<a href="https://www.h-schmidt.net/FloatConverter/IEEE754.html">https://www.h-schmidt.net/FloatConverter/IEEE754.html</a>
+						</li>
+						<li>
+							Заблуждения о валютах<br/>
+							<a href="https://gist.github.com/rgs/6509585">https://gist.github.com/rgs/6509585</a>
+						</li>
+						<li>
+							Маппинг Doctrine <br/><a href="https://gist.github.com/athlan/cf9b6d388f9beb808e953ccf8533c56e">https://gist.github.com/athlan/cf9b6d388f9beb808e953ccf8533c56e</a>
+						</li>
+					</ul>
+				</section>
 			</div>
 		</div>
 
@@ -31,7 +731,7 @@
 			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
-
+				slideNumber: true,
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			});
