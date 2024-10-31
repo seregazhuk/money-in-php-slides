@@ -209,7 +209,18 @@
 
 							$five = new Money(500, new Currency('RUB')); // 5,00 ₽
 							$five = Money::RUB(500);
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h2>Иммутабельность</h2>
+					<pre>
+						<code class="language-php" data-trim>
+							use Money\Currency;
+							use Money\Money;
 
+							$net = new Money(123, new Currency('USD')); // $1.23
+							$gross = $net->multiply('1.10', Money::ROUND_UP);
 						</code>
 					</pre>
 				</section>
@@ -242,7 +253,7 @@
 
 							$result = $value1->equals($value2); // false
 
-							$result = $value1->greaterThan($value2); // false
+							$result = $value1->greaterThan($value2); // true
 						</code>
 					</pre>
 					<pre class="fragment">
@@ -253,18 +264,6 @@
 							$valueInRub->equals($valueInUSD);
 
 							// InvalidArgumentException: Currencies must be identical
-						</code>
-					</pre>
-				</section>
-				<section>
-					<h2>Иммутабельность</h2>
-					<pre>
-						<code class="language-php" data-trim>
-							use Money\Currency;
-							use Money\Money;
-
-							$net = new Money(123, new Currency('USD')); // $1.23
-							$gross = $net->multiply('1.10', Money::ROUND_UP);
 						</code>
 					</pre>
 				</section>
@@ -593,7 +592,7 @@
 							#[ORM\Entity]
 							class Transaction
 							{
-								#[ORM\Column(type: 'decimal', precision: 33, scale: 18, nullable: false)]
+								#[ORM\Column(type: 'decimal', precision: 33, scale: 6, nullable: false)]
 								private string $amount;
 
 								#[ORM\Column(length: 15, nullable: false)]
@@ -620,7 +619,7 @@
 							#[ORM\Entity]
 							class Transaction
 							{
-								#[ORM\Column(type: 'decimal', precision: 33, scale: 18, nullable: false)]
+								#[ORM\Column(type: 'decimal', precision: 33, scale: 6, nullable: false)]
 								private string $amount;
 
 								#[ORM\Column(type: 'currency', length: 15, nullable: false)]
@@ -637,7 +636,6 @@
 									return new Money($this->amount, $this->currency);
 								}
 							}
-
 						</code>
 					</pre>
 				</section>
