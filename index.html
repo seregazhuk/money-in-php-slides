@@ -88,15 +88,16 @@
 					</div>
 				</section>
 				<section>
+					<h2>Баги</h2>
 					<p>«Я могу установить цену 4.20, но когда ставлю 4.10 - она меняется на 4.09. Почему?»</p>
 					<pre class="fragment">
 						<code class="language-php" data-trim style="text-align: center">
-							var_dump((int)(4.20 * 100)); // 420
+							var_dump((int)("4.20" * 100)); // 420
 						</code>
 					</pre>
 					<pre class="fragment">
 						<code class="language-php" data-trim style="text-align: center">
-						var_dump((int)(4.10 * 100)); // 409
+						var_dump((int)("4.10" * 100)); // 409
 						</code>
 					</pre>
 				</section>
@@ -107,7 +108,7 @@
 					<h2>Float</h2>
 					<pre>
 						<code class="language-php" data-trim style="text-align: center">
-							var_dump(4.10 * 100); // float(409.99999999999994)
+							var_dump("4.10" * 100); // float(409.99999999999994)
 						</code>
 					</pre>
 				</section>
@@ -134,11 +135,20 @@
 					<h2>String + BCMath</h2>
 					<pre>
 						<code class="language-php" data-trim style="text-align: left">
-							$a = '0.01';
-							$b = '5';
+							$a = "0.01";
+							$b = "5";
 
 							var_dump(bcadd($a, $b)); // "5"
 							var_dump(bcadd($a, $b, 2)); // "5.01"
+						</code>
+					</pre>
+					<pre class="fragment">
+						<code class="language-php" data-trim style="text-align: left">
+							$a = '123.45';
+							$b = '1.19';
+							// 123.45 * 1.19 = 146.9055
+
+							var_dump(bcmul($a, $b, 2)); // string(6) "146.90"
 						</code>
 					</pre>
 				</section>
@@ -387,7 +397,7 @@
 								<th>Сумма</th>
 							</tr>
 						</thead>
-							<tbody>
+						<tbody>
 								<tr>
 									<td>Нидерланды</td>
 									<td>US$ 12.345,67</td>
@@ -523,7 +533,7 @@
 					<pre>
 						<code class="language-php" data-trim>
 							$commission = 0.00001; // "1.0E-5"
-							$this->moneyParser->parse(
+							$this->decimalMoneyParser->parse(
 								(string)$commission, new Currency('ETH')
 							);
 							// Cannot parse "1.0E-5" to Money
@@ -674,7 +684,7 @@
 				<section>
 					<h2>База данных</h2>
 					<div class="r-stack">
-						<table class="fragment current-visible">
+						<table class="fragment fade-out" data-fragment-index="0">
 							<thead>
 							<tr>
 								<th>amount</th>
@@ -694,7 +704,7 @@
 								</tr>
 							</tbody>
 						</table>
-						<table class="fragment current-visible">
+						<table class="fragment current-visible" data-fragment-index="0">
 							<thead>
 							<tr>
 								<th>amount</th>
