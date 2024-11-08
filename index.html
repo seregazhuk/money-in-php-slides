@@ -75,7 +75,7 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section data-background-image="images/title.png">
+				<section data-background-image="images/money.png">
 				</section>
 				<section>
 					<h2>Как считать деньги и не терять их</h2>
@@ -124,7 +124,7 @@
 
 							$priceInMinorUnits = $priceInUsd * 100; // 409.99999
 
-							var_dump((int)$priceInMinorUnits); // 409
+							var_dump((int)$priceInMinorUnits); // int(409)
 						</code>
 					</pre>
 				</section>
@@ -143,9 +143,9 @@
 						</code>
 					</pre>
 					<pre class="fragment">
-						<code class="language-php" data-trim style="text-align: left">
-							$a = '123.45';
-							$b = '1.19';
+						<code class="language-php" data-trim>
+							$a = "123.45";
+							$b = "1.19";
 							// 123.45 * 1.19 = 146.9055
 
 							var_dump(bcmul($a, $b, 2)); // string(6) "146.90"
@@ -630,17 +630,20 @@
 				</section>
 				<section>
 					<pre style="width: 105%">
-						<code style="font-size:22px" class="language-php" data-trim data-line-numbers="1-20|4-5,7-8|10-19">
+						<code style="font-size:22px" class="language-php" data-trim data-line-numbers="1-23|4-5,7-8|10-22">
 							#[ORM\Entity]
 							class Transaction
 							{
-								#[ORM\Column(type: 'decimal', precision: 33, scale: 6, nullable: false)]
+								#[ORM\Column(type: 'decimal', precision: 33, nullable: false)]
 								private string $amount;
 
 								#[ORM\Column(length: 15, nullable: false)]
 								private string $currency;
 
-								public function __construct(Money $amount) {
+								public function __construct(
+									/* ... */
+									Money $amount
+								) {
 									/* ... */
 									$this->amount = $amount->getAmount();
 									$this->currency = $amount->getCurrency()->getCode();
@@ -651,23 +654,25 @@
 									return new Money($this->amount, new Currency($this->currency));
 								}
 							}
-
 						</code>
 					</pre>
 				</section>
 				<section>
 					<pre style="width: 105%">
-						<code class="language-php" data-trim data-line-numbers="7-8,13,18">
+						<code class="language-php" data-trim data-line-numbers="7-8,12,16">
 							#[ORM\Entity]
 							class Transaction
 							{
-								#[ORM\Column(type: 'decimal', precision: 33, scale: 6, nullable: false)]
+								#[ORM\Column(type: 'decimal', precision: 33, nullable: false)]
 								private string $amount;
 
 								#[ORM\Column(type: 'currency', length: 15, nullable: false)]
 								private Currency $currency;
 
-								public function __construct(Money $amount) {
+								public function __construct(
+									/* ... */
+									Money $amount
+								) {
 									/* ... */
 									$this->amount = $amount->getAmount();
 									$this->currency = $amount->getCurrency();
