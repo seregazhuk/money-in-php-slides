@@ -68,6 +68,13 @@
 			.links a {
 				font-size: 38px;
 			}
+			.reveal .db-rows-small {
+				font-size: 0.7em;
+			}
+
+			.reveal a.link-in-section {
+				font-size: 0.5em;
+			}
 		</style>
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="plugin/highlight/github.css">
@@ -75,8 +82,8 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section data-background-image="images/money.png">
-				</section>
+<!--				<section data-background-image="images/money.png">-->
+<!--				</section>-->
 				<section>
 					<h2>Как считать деньги и не терять их</h2>
 					<div style="display: flex; align-items: center; justify-content: center;">
@@ -129,8 +136,20 @@
 					</pre>
 				</section>
 				<section>
-					<img src="images/meme-cannot-just.jpg" alt="" style="width: 100%">
+					<h2>Float: не только decimal</h2>
+					<pre>
+						<code class="language-php" data-trim>
+							$number = 49778510530730964;
+							var_dump($number); // int(49778510530730964)
+
+							$floatNumber = (float)$number;
+							var_dump($floatNumber); // int(49778510530730960)
+						</code>
+					</pre>
 				</section>
+<!--				<section>-->
+<!--					<img src="images/meme-cannot-just.jpg" alt="" style="width: 100%">-->
+<!--				</section>-->
 				<section>
 					<h2>String + BCMath</h2>
 					<pre>
@@ -196,6 +215,35 @@
 				<section>
 					<h2>Библиотеки</h2>
 					<img src="images/libs.png" alt="">
+				</section>
+				<section>
+					<table class="db-rows-small">
+						<thead>
+						<tr>
+							<th>MoneyPHP</th>
+							<th>Brick\Money</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td>Зрелая библиотека (c 2011 г.)</td>
+							<td>До сих пор нет версии 1.0</td>
+						</tr>
+						<tr>
+							<td>Не очень user-friendly-интерфейс</td>
+							<td>user-friendly-интерфейс</td>
+						</tr>
+						<tr>
+							<td>Парсеры, форматеры, конвертеры</td>
+							<td>Парсеры, форматеры, конвертеры</td>
+						</tr>
+						<tr>
+							<td>Поддержка криптовалют из коробки</td>
+							<td>Нужно добавлять всё самому</td>
+						</tr>
+						</tbody>
+					</table>
+					<a href="https://github.com/brick/money/issues/28" class="link-in-section">https://github.com/brick/money/issues/28</a>
 				</section>
 				<section>
 					<h2>MoneyPHP: паттерн Money</h2>
@@ -657,35 +705,35 @@
 						</code>
 					</pre>
 				</section>
-				<section>
-					<pre style="width: 105%">
-						<code class="language-php" data-trim data-line-numbers="7-8,12,16">
-							#[ORM\Entity]
-							class Transaction
-							{
-								#[ORM\Column(type: 'decimal', precision: 33, nullable: false)]
-								private string $amount;
+<!--				<section>-->
+<!--					<pre style="width: 105%">-->
+<!--						<code class="language-php" data-trim data-line-numbers="7-8,12,16">-->
+<!--							#[ORM\Entity]-->
+<!--							class Transaction-->
+<!--							{-->
+<!--								#[ORM\Column(type: 'decimal', precision: 33, nullable: false)]-->
+<!--								private string $amount;-->
 
-								#[ORM\Column(type: 'currency', length: 15, nullable: false)]
-								private Currency $currency;
+<!--								#[ORM\Column(type: 'currency', length: 15, nullable: false)]-->
+<!--								private Currency $currency;-->
 
-								public function __construct(
-									/* ... */
-									Money $amount
-								) {
-									/* ... */
-									$this->amount = $amount->getAmount();
-									$this->currency = $amount->getCurrency();
-								}
+<!--								public function __construct(-->
+<!--									/* ... */-->
+<!--									Money $amount-->
+<!--								) {-->
+<!--									/* ... */-->
+<!--									$this->amount = $amount->getAmount();-->
+<!--									$this->currency = $amount->getCurrency();-->
+<!--								}-->
 
-								public function getPrice(): Money
-								{
-									return new Money($this->amount, $this->currency);
-								}
-							}
-						</code>
-					</pre>
-				</section>
+<!--								public function getPrice(): Money-->
+<!--								{-->
+<!--									return new Money($this->amount, $this->currency);-->
+<!--								}-->
+<!--							}-->
+<!--						</code>-->
+<!--					</pre>-->
+<!--				</section>-->
 				<section>
 					<h2>База данных</h2>
 					<div class="r-stack">
@@ -704,7 +752,7 @@
 								</tr>
 								<tr>
 									<td>100000</td>
-									<td>1000 RUB</td>
+									<td>RUB</td>
 									<td style="border-bottom: 0">1000 RUB</td>
 								</tr>
 							</tbody>
@@ -724,7 +772,7 @@
 							</tr>
 							<tr>
 								<td>1000.00</td>
-								<td>1000 RUB</td>
+								<td>RUB</td>
 								<td style="border-bottom: 0">1000 RUB</td>
 							</tr>
 							</tbody>
@@ -740,22 +788,10 @@
 						<li>Помним про каст float к string (scientific notation)</li>
 					</ul>
 				</section>
-				<section>
-					<img src="images/angry.jpg" alt="" style="width:40%">
-					<h4>Блятский каст в флоат! (с) Тимлид</h4>
-				</section>
-				<section data-transition="none" data-transition-speed="fast">
-					<h2>Float: не только decimal</h2>
-					<pre>
-						<code class="language-php" data-trim>
-							$number = 49778510530730964;
-							var_dump($number); // int(49778510530730964)
-
-							$floatNumber = (float)$number;
-							var_dump($number); // int(49778510530730960)
-						</code>
-					</pre>
-				</section>
+<!--				<section>-->
+<!--					<img src="images/angry.jpg" alt="" style="width:40%">-->
+<!--					<h4>Блятский каст в флоат! (с) Тимлид</h4>-->
+<!--				</section>-->
 				<section>
 					<h2>Спасибо!</h2>
 					<img src="images/thank-you.jpg" alt="" style="width:80%">
@@ -774,6 +810,9 @@
 						</li>
 						<li>
 							Маппинг Doctrine c Embedded<br/><a href="https://gist.github.com/athlan/cf9b6d388f9beb808e953ccf8533c56e">https://gist.github.com/athlan/cf9b6d388f9beb808e953ccf8533c56e</a>
+						</li>
+						<li>
+							Сравнение MoneyPHP и Brick<a href="https://github.com/brick/money/issues/28">https://github.com/brick/money/issues/28</a>
 						</li>
 					</ul>
 				</section>
